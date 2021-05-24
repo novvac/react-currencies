@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const currenciesFields = [
+const defaultCurrenciesFields = [
     {
         value: 0,
         type: "PLN"
@@ -81,6 +81,7 @@ function AppLayout() {
     const classes = useStyles();
     const theme = useTheme();
     const [currencies, setCurrencies] = useState([]);
+    const [currenciesFields, setCurrenciesFields] = useState(defaultCurrenciesFields);
     const [loading, setLoading] = useState(true);
 
     const isMobile = useMediaQuery(theme.breakpoints.down('md'), {
@@ -88,13 +89,28 @@ function AppLayout() {
     })
 
     useEffect(() => {
-        const CURRENCIES_URL = "https://free.currconv.com/api/v7/currencies?apiKey=237b33afb61f2bcfe213"
-        axios.get(CURRENCIES_URL).then(res => {
+        const CURRENCIES_LIST = "https://free.currconv.com/api/v7/currencies?apiKey=237b33afb61f2bcfe213"
+        axios.get(CURRENCIES_LIST).then(res => {
             setCurrencies(res.data.results);
             setLoading(false);
         })
     }, []);
 
+    function currencyAction(type) {
+        let fields = currenciesFields.slice();
+        
+        if(type === "add") {
+            fields.push({value: 0, type: "PLN"});
+        } else if(type === "remove") {
+            fields.pop();
+
+            if(currenciesFields.length <= 2) {
+                return null;
+            }
+        }
+
+        setCurrenciesFields(fields);
+    }
 
     // render
     if(loading) {
@@ -128,18 +144,16 @@ function AppLayout() {
                         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Next we use some API when you typing your exchange value!
                     </Typography>
 
-                    {currenciesFields.map(field => {
-                        return (
-                            <CurrencyBox currencies={currencies}/>
-                        )
-                    })}
+                    {currenciesFields.map((field, i) => (
+                        <CurrencyBox key={i} currencies={currencies}/>
+                    ))}
 
                     <Box className={classes.actions}>
-                        <Button color="primary" variant="outlined">
+                        <Button color="primary" variant="outlined" onClick={() => currencyAction('add')}>
                             Add currency
                         </Button>
 
-                        <Button className={classes.actionsRemove} color="secondary" variant="outlined" disabled={currenciesFields.length <= 2}>
+                        <Button className={classes.actionsRemove} color="secondary" variant="outlined" disabled={currenciesFields.length <= 2} onClick={() => currencyAction("remove")}>
                             Remove last
                         </Button>
                     </Box>
