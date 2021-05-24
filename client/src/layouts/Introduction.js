@@ -9,10 +9,19 @@ import bloggingAnimation from '../data/animations/blogging.json';
 
 const useStyles = makeStyles(theme => ({
     root: {
-
+        display: 'flex',
+        flexDirection: "column",
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     title: {
-
+        marginBottom: theme.spacing(4),
+    },
+    subtitle: {
+        marginTop: theme.spacing(2)
+    },
+    medium: {
+        fontWeight: 600,
     }
 }))
 
