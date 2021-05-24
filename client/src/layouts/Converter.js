@@ -35,10 +35,12 @@ const useStyles = makeStyles(theme => ({
 
 const defaultCurrenciesFields = [
     {
+        id: 0,
         value: 0,
         type: "PLN"
     },
     {
+        id: 1,
         value: 0,
         type: "EUR"
     }
@@ -50,9 +52,12 @@ function Converter(props) {
 
     function currencyAction(type) {
         let fields = currenciesFields.slice();
+        const nextId = fields[fields.length-1].id + 1;
+
+        console.log(nextId);
         
         if(type === "add") {
-            fields.push({value: 0, type: "PLN"});
+            fields.push({value: 0, type: "PLN", id: nextId});
         } else if(type === "remove") {
             fields.pop();
 
@@ -62,6 +67,21 @@ function Converter(props) {
         }
 
         setCurrenciesFields(fields);
+    }
+
+    const handleValueChange = (e) => {
+        let fields = currenciesFields.slice();
+        const index = fields.findIndex(el => el.id.toString() === e.currentTarget.id)
+
+        fields[index].value = e.currentTarget.value;
+
+        // zaaktualizuj inne inputy
+
+        setCurrenciesFields(fields);
+    }
+
+    const handleTypeChange = () => {
+
     }
 
     return (
@@ -76,7 +96,14 @@ function Converter(props) {
                 </Typography>
 
                 {currenciesFields.map((field, i) => (
-                    <CurrencyBox key={i} currencies={props.currencies} field={field}/>
+                    <CurrencyBox 
+                        key={i}
+                        id={field.id.toString()}
+                        currencies={props.currencies} 
+                        field={field}
+                        onValueChange={handleValueChange}
+                        onTypeChange={handleTypeChange}
+                    />
                 ))}
 
                 <Box className={classes.buttons}>

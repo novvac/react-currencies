@@ -12,17 +12,16 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function CurrencyBox({currencies, field, ...rest}) {
+function CurrencyBox({currencies, field, id, ...rest}) {
     const classes = useStyles();
-    console.log(field);
 
     return (
         <Grid container className={classes.root} spacing={2}>
             <Grid item xs={6}>
-                <CurrencyValue value={field.value}/>
+                <CurrencyValue id={id} onChange={rest.onValueChange}/>
             </Grid>
             <Grid item xs={6}>
-                <CurrencyType defaultType={field.type} currencies={currencies}/>
+                <CurrencyType defaultType={field.type} currencies={currencies} onChange={rest.onTypeChange}/>
             </Grid>
         </Grid>
     )
@@ -31,6 +30,7 @@ function CurrencyBox({currencies, field, ...rest}) {
 CurrencyBox.propTypes = {
     currencies: PropTypes.object.isRequired,
     field: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired
 }
 
 export default CurrencyBox;

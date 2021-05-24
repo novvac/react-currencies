@@ -3,19 +3,19 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-function CurrencyValue({value, ...rest}) {
+function CurrencyValue({...rest}) {
     return (
         <TextField
             fullWidth
             variant="outlined"
             type="number"
-            value={value}
+            {...rest}
         />
     )
 }
 
 CurrencyValue.propTypes = {
-    value: PropTypes.number.isRequired,
+    
 }
 
 
