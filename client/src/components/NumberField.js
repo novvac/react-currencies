@@ -8,7 +8,6 @@ function NumberField() {
             fullWidth
             label="Value"
             variant="outlined"
-            size="small"
             type="number"
         />
     )

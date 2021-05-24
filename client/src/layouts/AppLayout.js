@@ -6,13 +6,15 @@ import {
     useMediaQuery,
 } from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 // lottie
 import LottieControl from '../components/LottieControl';
 import bloggingAnimation from '../data/animations/blogging.json'
 
 import NumberField from '../components/NumberField';
-import SelectField from '../components/SelectField';
+import CurrencySelect from '../components/CurrencySelect';
 
 // constants
 const cardPadding = 6;
@@ -61,10 +63,26 @@ const useStyles = makeStyles(theme => ({
 function AppLayout() {
     const classes = useStyles();
     const theme = useTheme();
+    const [currencies, setCurrencies] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const isMobile = useMediaQuery(theme.breakpoints.down('md'), {
         defaultMatches: true,
     })
+
+    useEffect(() => {
+        const CURRENCIES_URL = "https://free.currconv.com/api/v7/currencies?apiKey=237b33afb61f2bcfe213"
+        axios.get(CURRENCIES_URL).then(res => {
+            setCurrencies(res.data.results);
+            setLoading(false);
+        })
+    }, []);
+
+    if(loading) {
+        return (
+            <p>Loading...</p>
+        )
+    }
 
     return (
         <Grid container spacing={isMobile ? 2 : 10} className={classes.root}>
@@ -98,7 +116,7 @@ function AppLayout() {
                         </Grid>
 
                         <Grid item xs={6}>
-                            <SelectField/>
+                            <CurrencySelect currencies={currencies}/>
                         </Grid>
                     </Grid>
 
@@ -108,7 +126,7 @@ function AppLayout() {
                         </Grid>
 
                         <Grid item xs={6}>
-                            <SelectField/>
+                            <CurrencySelect currencies={currencies} defaultValue="EUR"/>
                         </Grid>
                     </Grid>
                 </Box>
