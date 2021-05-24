@@ -18,10 +18,10 @@ function CurrencyBox({currencies, field, id, ...rest}) {
     return (
         <Grid container className={classes.root} spacing={2}>
             <Grid item xs={6}>
-                <CurrencyValue id={id} onChange={rest.onValueChange}/>
+                <CurrencyValue id={id} onChange={rest.onChange}/>
             </Grid>
             <Grid item xs={6}>
-                <CurrencyType defaultType={field.type} currencies={currencies} onChange={rest.onTypeChange}/>
+                <CurrencyType id={id} defaultType={field.type} currencies={currencies} onChange={rest.onChange}/>
             </Grid>
         </Grid>
     )

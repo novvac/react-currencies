@@ -29,10 +29,11 @@ function CurrencyType({currencies, defaultType, ...rest}) {
             size="small"
             fullWidth
         >
-            <Select value={type}>
+            <Select value={type} onChange={rest.onChange}>
                 {Object.values(currencies).map(el => {
                     return (
-                        <MenuItem 
+                        <MenuItem
+                            id={rest.id}
                             key={el.id} 
                             value={el.id} 
                             className={classes.menuItem}

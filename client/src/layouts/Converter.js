@@ -54,8 +54,6 @@ function Converter(props) {
     function currencyAction(type) {
         let fields = currenciesFields.slice();
         const nextId = fields[fields.length-1].id + 1;
-
-        console.log(nextId);
         
         if(type === "add") {
             fields.push({value: 0, type: "PLN", id: nextId});
@@ -70,19 +68,20 @@ function Converter(props) {
         setCurrenciesFields(fields);
     }
 
-    const handleValueChange = (e) => {
+    const handleChange = (e) => {
         let fields = currenciesFields.slice();
         const index = fields.findIndex(el => el.id.toString() === e.currentTarget.id)
 
-        fields[index].value = e.currentTarget.value;
+        if(e.currentTarget.dataset.value) {
+            fields[index].type = e.currentTarget.dataset.value;
+        } else {
+            fields[index].value = e.currentTarget.value;
+        }
 
         // zaaktualizuj inne inputy
 
         setCurrenciesFields(fields);
-    }
-
-    const handleTypeChange = () => {
-
+        console.log(currenciesFields[index]);
     }
 
     return (
@@ -97,7 +96,7 @@ function Converter(props) {
                 </Typography>
 
                 {currenciesFields.map((field, i) => (
-                    <>
+                    <div key={i}>
                         {i <= 1 ? (
                             <Typography variant="caption">
                                 {i === 0 ? 'From' : 'To'}
@@ -105,14 +104,12 @@ function Converter(props) {
                         ) : null}
 
                         <CurrencyBox 
-                            key={i}
                             id={field.id.toString()}
                             currencies={props.currencies} 
                             field={field}
-                            onValueChange={handleValueChange}
-                            onTypeChange={handleTypeChange}
+                            onChange={handleChange}
                         />
-                    </>
+                    </div>
                 ))}
 
                 <Box className={classes.buttons}>
