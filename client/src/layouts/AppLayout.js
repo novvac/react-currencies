@@ -11,6 +11,7 @@ import LottieControl from '../components/LottieControl';
 import bloggingAnimation from '../data/animations/blogging.json'
 
 import NumberField from '../components/NumberField';
+import SelectField from '../components/SelectField';
 
 // constants
 const cardPadding = 6;
@@ -18,6 +19,8 @@ const cardPadding = 6;
 const useStyles = makeStyles(theme => ({
     root: {
         margin: 'auto',
+        display: 'flex',
+        alignItems: 'center',
         [theme.breakpoints.down('md')]: {
             width: '100%',
             height: 'calc(100% - 32px)',
@@ -80,23 +83,23 @@ function AppLayout() {
                         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Next we use some API when you typing your exchange value!
                     </Typography>
 
-                    <Grid container className={classes.subtitle} spacing={4}>
+                    <Grid container className={classes.subtitle} spacing={3}>
                         <Grid item xs={6}>
                             <NumberField/>
                         </Grid>
 
                         <Grid item xs={6}>
-                            2 of 2
+                            <SelectField/>
                         </Grid>
                     </Grid>
 
-                    <Grid container spacing={4}>
+                    <Grid container spacing={3}>
                         <Grid item xs={6}>
                             <NumberField/>
                         </Grid>
 
                         <Grid item xs={6}>
-                            2 of 2
+                            <SelectField/>
                         </Grid>
                     </Grid>
                 </Box>
