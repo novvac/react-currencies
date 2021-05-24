@@ -15,9 +15,9 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function CurrencySelect({currencies, defaultValue="PLN", ...rest}) { 
+function CurrencyType({currencies, defaultValue="PLN", ...rest}) { 
     const classes = useStyles();
-    const [value, setValue] = useState("PLN")
+    const [value, setValue] = useState(defaultValue)
 
     const handleClick = (e) => {
         setValue(e.currentTarget.dataset.value);
@@ -53,9 +53,9 @@ function CurrencySelect({currencies, defaultValue="PLN", ...rest}) {
     )
 }
 
-CurrencySelect.propTypes = {
+CurrencyType.propTypes = {
     currencies: PropTypes.object.isRequired,
     defaultValue: PropTypes.string
 }
 
-export default CurrencySelect;
+export default CurrencyType;

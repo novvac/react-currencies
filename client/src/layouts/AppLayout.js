@@ -4,6 +4,7 @@ import {
     Typography,
     Box,
     useMediaQuery,
+    Button
 } from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { useState, useEffect } from 'react';
@@ -13,8 +14,7 @@ import axios from 'axios';
 import LottieControl from '../components/LottieControl';
 import bloggingAnimation from '../data/animations/blogging.json'
 
-import NumberField from '../components/NumberField';
-import CurrencySelect from '../components/CurrencySelect';
+import CurrencyBox from '../components/CurrencyBox';
 
 // constants
 const cardPadding = 6;
@@ -57,8 +57,25 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down('md')]: {
             padding: theme.spacing(3)
         }
+    },
+    actions: {
+        marginTop: theme.spacing(3),
+    },
+    actionsRemove: {
+        marginLeft: theme.spacing(2),
     }
 }))
+
+const currenciesFields = [
+    {
+        value: 0,
+        type: "PLN"
+    },
+    {
+        value: 0,
+        type: "EUR"
+    }
+]
 
 function AppLayout() {
     const classes = useStyles();
@@ -78,12 +95,13 @@ function AppLayout() {
         })
     }, []);
 
+
+    // render
     if(loading) {
         return (
-            <p>Loading...</p>
+            <p>loading... please wait</p>
         )
     }
-
     return (
         <Grid container spacing={isMobile ? 2 : 10} className={classes.root}>
             <Hidden mdDown>
@@ -110,25 +128,21 @@ function AppLayout() {
                         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Next we use some API when you typing your exchange value!
                     </Typography>
 
-                    <Grid container className={classes.subtitle} spacing={isMobile ? 1 : 3}>
-                        <Grid item xs={6}>
-                            <NumberField/>
-                        </Grid>
+                    {currenciesFields.map(field => {
+                        return (
+                            <CurrencyBox currencies={currencies}/>
+                        )
+                    })}
 
-                        <Grid item xs={6}>
-                            <CurrencySelect currencies={currencies}/>
-                        </Grid>
-                    </Grid>
+                    <Box className={classes.actions}>
+                        <Button color="primary" variant="outlined">
+                            Add currency
+                        </Button>
 
-                    <Grid container className={isMobile ? classes.subtitle : null} spacing={isMobile ? 1 : 3}>
-                        <Grid item xs={6}>
-                            <NumberField/>
-                        </Grid>
-
-                        <Grid item xs={6}>
-                            <CurrencySelect currencies={currencies} defaultValue="EUR"/>
-                        </Grid>
-                    </Grid>
+                        <Button className={classes.actionsRemove} color="secondary" variant="outlined" disabled={currenciesFields.length <= 2}>
+                            Remove last
+                        </Button>
+                    </Box>
                 </Box>
             </Grid>
         </Grid>

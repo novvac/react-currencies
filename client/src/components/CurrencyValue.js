@@ -2,7 +2,7 @@ import {
     TextField
 } from '@material-ui/core';
 
-function NumberField() {
+function CurrencyValue() {
     return (
         <TextField
             fullWidth
@@ -13,4 +13,4 @@ function NumberField() {
     )
 }
 
-export default NumberField;
+export default CurrencyValue;
