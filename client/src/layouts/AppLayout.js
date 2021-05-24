@@ -1,7 +1,8 @@
 import {
     Grid,
     Hidden,
-    Typography
+    Typography,
+    Box,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -9,16 +10,21 @@ import { makeStyles } from '@material-ui/core/styles'
 import LottieControl from '../components/LottieControl';
 import bloggingAnimation from '../data/animations/blogging.json'
 
+import NumberField from '../components/NumberField';
+
+// constants
+const cardPadding = 6;
+
 const useStyles = makeStyles(theme => ({
     root: {
         margin: 'auto',
         [theme.breakpoints.down('md')]: {
             width: '100%',
-            height: 'calc(100% - 64px)',
+            height: 'calc(100% - 32px)',
         },
         [theme.breakpoints.up('lg')]: {
-            width: 'calc(100% - 256px)',
-            height: 'calc(100% - 192px)',
+            width: 'calc(100% - 192px)',
+            height: 'calc(100% - 128px)',
         },
     },
     medium: {
@@ -30,11 +36,18 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         justifyContent: 'space-between'
     },
-    introductionSubtitle: {
+    subtitle: {
         marginTop: theme.spacing(2),
     },
     introductionWrapper: {
         marginBottom: theme.spacing(4)
+    },
+    card: {
+        border: '1px solid rgba(0,0,0,.1)',
+        borderRadius: '8px',
+        boxShadow: '0 6px 8px rgba(0,0,0,.075)',
+        // height: `calc(100% - ${theme.spacing(cardPadding)* 2}px)`,
+        padding: theme.spacing(cardPadding),
     }
 }))
 
@@ -42,14 +55,14 @@ function AppLayout() {
     const classes = useStyles();
 
     return (
-        <Grid container spacing={3} className={classes.root}>
+        <Grid container spacing={10} className={classes.root}>
             <Hidden mdDown>
-                <Grid item md={6} className={classes.introduction}>
+                <Grid item lg={6} className={classes.introduction}>
                     <div className={classes.introductionWrapper}>
                         <Typography variant="h3" color="primary" className={classes.medium}>
-                            Currency Exchange
+                            Currency Calculator
                         </Typography>
-                        <Typography variant="h6" className={classes.introductionSubtitle}>
+                        <Typography variant="h6" className={classes.subtitle}>
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500
                         </Typography>
                     </div>
@@ -57,8 +70,36 @@ function AppLayout() {
                     <LottieControl data={bloggingAnimation}/>
                 </Grid>
             </Hidden>
-            <Grid item xs={12} md={6}>
-                box
+            <Grid item xs={12} lg={6}>
+                <Box className={classes.card}>
+                    <Typography variant="h5" color="primary" className={classes.medium}>
+                        How our converter works?
+                    </Typography>
+
+                    <Typography variant="body1" className={classes.subtitle}>
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Next we use some API when you typing your exchange value!
+                    </Typography>
+
+                    <Grid container className={classes.subtitle} spacing={4}>
+                        <Grid item xs={6}>
+                            <NumberField/>
+                        </Grid>
+
+                        <Grid item xs={6}>
+                            2 of 2
+                        </Grid>
+                    </Grid>
+
+                    <Grid container spacing={4}>
+                        <Grid item xs={6}>
+                            <NumberField/>
+                        </Grid>
+
+                        <Grid item xs={6}>
+                            2 of 2
+                        </Grid>
+                    </Grid>
+                </Box>
             </Grid>
         </Grid>
     )
