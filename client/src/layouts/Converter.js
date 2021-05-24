@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => ({
     },
     subtitle: {
         marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(3)
     },
     buttons: {
         marginTop: theme.spacing(3),
@@ -96,14 +97,22 @@ function Converter(props) {
                 </Typography>
 
                 {currenciesFields.map((field, i) => (
-                    <CurrencyBox 
-                        key={i}
-                        id={field.id.toString()}
-                        currencies={props.currencies} 
-                        field={field}
-                        onValueChange={handleValueChange}
-                        onTypeChange={handleTypeChange}
-                    />
+                    <>
+                        {i <= 1 ? (
+                            <Typography variant="caption">
+                                {i === 0 ? 'From' : 'To'}
+                            </Typography>
+                        ) : null}
+
+                        <CurrencyBox 
+                            key={i}
+                            id={field.id.toString()}
+                            currencies={props.currencies} 
+                            field={field}
+                            onValueChange={handleValueChange}
+                            onTypeChange={handleTypeChange}
+                        />
+                    </>
                 ))}
 
                 <Box className={classes.buttons}>
