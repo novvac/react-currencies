@@ -3,8 +3,9 @@ import {
     Hidden,
     Typography,
     Box,
+    useMediaQuery,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 
 // lottie
 import LottieControl from '../components/LottieControl';
@@ -19,11 +20,11 @@ const cardPadding = 6;
 const useStyles = makeStyles(theme => ({
     root: {
         margin: 'auto',
-        display: 'flex',
         alignItems: 'center',
+        display: 'flex',
         [theme.breakpoints.down('md')]: {
             width: '100%',
-            height: 'calc(100% - 32px)',
+            height: '100%',
         },
         [theme.breakpoints.up('lg')]: {
             width: 'calc(100% - 192px)',
@@ -51,14 +52,22 @@ const useStyles = makeStyles(theme => ({
         boxShadow: '0 6px 8px rgba(0,0,0,.075)',
         // height: `calc(100% - ${theme.spacing(cardPadding)* 2}px)`,
         padding: theme.spacing(cardPadding),
+        [theme.breakpoints.down('md')]: {
+            padding: theme.spacing(3)
+        }
     }
 }))
 
 function AppLayout() {
     const classes = useStyles();
+    const theme = useTheme();
+
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'), {
+        defaultMatches: true,
+    })
 
     return (
-        <Grid container spacing={10} className={classes.root}>
+        <Grid container spacing={isMobile ? 2 : 10} className={classes.root}>
             <Hidden mdDown>
                 <Grid item lg={6} className={classes.introduction}>
                     <div className={classes.introductionWrapper}>
@@ -83,7 +92,7 @@ function AppLayout() {
                         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Next we use some API when you typing your exchange value!
                     </Typography>
 
-                    <Grid container className={classes.subtitle} spacing={3}>
+                    <Grid container className={classes.subtitle} spacing={isMobile ? 1 : 3}>
                         <Grid item xs={6}>
                             <NumberField/>
                         </Grid>
@@ -93,7 +102,7 @@ function AppLayout() {
                         </Grid>
                     </Grid>
 
-                    <Grid container spacing={3}>
+                    <Grid container className={isMobile ? classes.subtitle : null} spacing={isMobile ? 1 : 3}>
                         <Grid item xs={6}>
                             <NumberField/>
                         </Grid>
