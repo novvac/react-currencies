@@ -4,6 +4,10 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 
+// lottie
+import LottieControl from '../components/LottieControl';
+import bloggingAnimation from '../data/animations/blogging.json'
+
 const useStyles = makeStyles(theme => ({
     root: {
         height: '100%',
@@ -23,11 +27,11 @@ function AppLayout() {
     return (
         <Grid container spacing={3} className={classes.root}>
             <Hidden mdDown>
-                <Grid item md={5}>
-                    introduction
+                <Grid item md={6}>
+                    <LottieControl data={bloggingAnimation}/>
                 </Grid>
             </Hidden>
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={6}>
                 box
             </Grid>
         </Grid>
