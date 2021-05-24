@@ -6,7 +6,7 @@ const defaultOptions = {
     autoplay: true,
 }
 
-function LottieControl({height='auto', width='auto', options=defaultOptions, data, ...rest}) {
+function LottieControl({height='auto', width='100%', options=defaultOptions, data, ...rest}) {
     defaultOptions.animationData = data;
 
     return (
