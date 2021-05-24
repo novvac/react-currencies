@@ -1,16 +1,22 @@
 import {
     TextField
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
-function CurrencyValue() {
+function CurrencyValue({value, ...rest}) {
     return (
         <TextField
             fullWidth
-            label="Value"
             variant="outlined"
             type="number"
+            value={value}
         />
     )
 }
+
+CurrencyValue.propTypes = {
+    value: PropTypes.number.isRequired,
+}
+
 
 export default CurrencyValue;

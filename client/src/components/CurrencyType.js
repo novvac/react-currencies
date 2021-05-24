@@ -15,12 +15,12 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function CurrencyType({currencies, defaultValue="PLN", ...rest}) { 
+function CurrencyType({currencies, defaultType, ...rest}) { 
     const classes = useStyles();
-    const [value, setValue] = useState(defaultValue)
+    const [type, setType] = useState(defaultType)
 
     const handleClick = (e) => {
-        setValue(e.currentTarget.dataset.value);
+        setType(e.currentTarget.dataset.value);
     }
 
     return (
@@ -29,7 +29,7 @@ function CurrencyType({currencies, defaultValue="PLN", ...rest}) {
             size="small"
             fullWidth
         >
-            <Select value={value}>
+            <Select value={type}>
                 {Object.values(currencies).map(el => {
                     return (
                         <MenuItem 
@@ -55,7 +55,7 @@ function CurrencyType({currencies, defaultValue="PLN", ...rest}) {
 
 CurrencyType.propTypes = {
     currencies: PropTypes.object.isRequired,
-    defaultValue: PropTypes.string
+    defaultType: PropTypes.string.isRequired,
 }
 
 export default CurrencyType;

@@ -1,6 +1,5 @@
 import {
     Grid,
-    Hidden,
     Typography,
     Box,
     useMediaQuery,
@@ -10,11 +9,8 @@ import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// lottie
-import LottieControl from '../components/LottieControl';
-import bloggingAnimation from '../data/animations/blogging.json'
-
 import CurrencyBox from '../components/CurrencyBox';
+import Introduction from './Introduction';
 
 // constants
 const cardPadding = 6;
@@ -36,17 +32,8 @@ const useStyles = makeStyles(theme => ({
     medium: {
         fontWeight: 600,
     },
-    introduction: {
-        display: 'flex',
-        flexDirection: "column",
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
     subtitle: {
         marginTop: theme.spacing(2),
-    },
-    introductionWrapper: {
-        marginBottom: theme.spacing(4)
     },
     card: {
         border: '1px solid rgba(0,0,0,.1)',
@@ -120,20 +107,7 @@ function AppLayout() {
     }
     return (
         <Grid container spacing={isMobile ? 2 : 10} className={classes.root}>
-            <Hidden mdDown>
-                <Grid item lg={6} className={classes.introduction}>
-                    <div className={classes.introductionWrapper}>
-                        <Typography variant="h3" color="primary" className={classes.medium}>
-                            Currency Calculator
-                        </Typography>
-                        <Typography variant="h6" className={classes.subtitle}>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500
-                        </Typography>
-                    </div>
-
-                    <LottieControl data={bloggingAnimation}/>
-                </Grid>
-            </Hidden>
+            <Introduction/>
             <Grid item xs={12} lg={6}>
                 <Box className={classes.card}>
                     <Typography variant="h5" color="primary" className={classes.medium}>
@@ -145,7 +119,7 @@ function AppLayout() {
                     </Typography>
 
                     {currenciesFields.map((field, i) => (
-                        <CurrencyBox key={i} currencies={currencies}/>
+                        <CurrencyBox key={i} currencies={currencies} field={field}/>
                     ))}
 
                     <Box className={classes.actions}>
