@@ -8,6 +8,7 @@ import CurrencyBox from '../components/CurrencyBox';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState } from 'react';
 import axios from 'axios';
+import keys from '../config/keys';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -73,7 +74,7 @@ function Converter(props) {
         let fields = currenciesFields.slice();
         const id = e.currentTarget.id;
         const index = fields.findIndex(el => el.id.toString() === id);
-        const BASE_URL = "https://free.currconv.com/api/v7/convert?apiKey=237b33afb61f2bcfe213&q=";
+        const BASE_URL = `https://free.currconv.com/api/v7/convert?apiKey=${keys.currenciesApi}&q=`;
 
         if(e.currentTarget.dataset.value) {
             fields[index].type = e.currentTarget.dataset.value;

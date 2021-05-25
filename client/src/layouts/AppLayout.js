@@ -5,6 +5,7 @@ import {
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import keys from '../config/keys'
 
 import Introduction from './Introduction';
 import Converter from './Converter';
@@ -36,7 +37,7 @@ function AppLayout() {
     })
 
     useEffect(() => {
-        const CURRENCIES_LIST = "https://free.currconv.com/api/v7/currencies?apiKey=237b33afb61f2bcfe213"
+        const CURRENCIES_LIST = "https://free.currconv.com/api/v7/currencies?apiKey=" + keys.currenciesApi;
         axios.get(CURRENCIES_LIST).then(res => {
             setCurrencies(res.data.results);
             setLoading(false);
