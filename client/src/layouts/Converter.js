@@ -6,7 +6,8 @@ import {
 } from '@material-ui/core'
 import CurrencyBox from '../components/CurrencyBox';
 import { makeStyles } from '@material-ui/core/styles';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -70,18 +71,30 @@ function Converter(props) {
 
     const handleChange = (e) => {
         let fields = currenciesFields.slice();
-        const index = fields.findIndex(el => el.id.toString() === e.currentTarget.id)
+        const id = e.currentTarget.id;
+        const index = fields.findIndex(el => el.id.toString() === id);
+        const BASE_URL = "https://free.currconv.com/api/v7/convert?apiKey=237b33afb61f2bcfe213&q=";
 
         if(e.currentTarget.dataset.value) {
             fields[index].type = e.currentTarget.dataset.value;
         } else {
             fields[index].value = e.currentTarget.value;
+            const fromCurrency = fields.find(field => field.id.toString() === id).type;
+            const value = fields.find(field => field.id.toString() === id).value;
+
+            fields.map(field => {
+                if(field.id.toString() !== id) {
+                    let el = document.getElementById(field.id);
+                    axios.get(BASE_URL + fromCurrency + "_" + field.type + '&compact=y').then(res => {
+                        const returnedVal = res.data[`${fromCurrency}_${field.type}`].val;
+                        el.value = (returnedVal * value).toFixed(2);
+                    })
+                }
+            })
+
         }
 
-        // zaaktualizuj inne inputy
-
         setCurrenciesFields(fields);
-        console.log(currenciesFields[index]);
     }
 
     return (
