@@ -83,7 +83,15 @@ function Converter(props) {
             const value = fields.find(field => field.id === 0).value;
 
             if(id.toString() === '0') {
-                console.log("pierwszy element")
+                fields.map(field => {
+                    if(field.id.toString() !== id) {
+                        let el = document.getElementById(field.id);
+                        axios.get(BASE_URL + fromCurrency + "_" + field.type + '&compact=y').then(res => {
+                            const returnedVal = res.data[`${fromCurrency}_${field.type}`].val;
+                            el.value = (returnedVal * value).toFixed(2);
+                        })
+                    }
+                })
             } else {
                 let el = document.getElementById(id);
                 axios.get(BASE_URL + fromCurrency + "_" + toCurrency + '&compact=y').then(res => {
