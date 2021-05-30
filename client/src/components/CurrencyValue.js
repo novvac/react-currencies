@@ -1,21 +1,20 @@
 import {
-    TextField
+    TextField,
+    FormControl
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
 
 function CurrencyValue({...rest}) {
     return (
-        <TextField
+        <FormControl
             fullWidth
-            variant="outlined"
-            type="number"
-            {...rest}
-        />
+        >
+            <TextField
+                variant="outlined"
+                type="number"
+                {...rest}
+            />
+        </FormControl>
     )
-}
-
-CurrencyValue.propTypes = {
-    
 }
 
 

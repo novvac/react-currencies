@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function CurrencyType({currencies, defaultType, ...rest}) { 
+function CurrencyType({currencyList, defaultType, ...rest}) { 
     const classes = useStyles();
     const [type, setType] = useState(defaultType)
 
@@ -30,14 +30,14 @@ function CurrencyType({currencies, defaultType, ...rest}) {
             fullWidth
         >
             <Select value={type} onChange={rest.onChange}>
-                {Object.values(currencies).map(el => {
+                {Object.values(currencyList).map(el => {
                     return (
                         <MenuItem
-                            id={rest.id}
                             key={el.id} 
                             value={el.id} 
-                            className={classes.menuItem}
                             onClick={handleClick}
+                            id={rest.id}
+                            className={classes.menuItem}
                         >
                             <div>
                                 {el.currencyName}
@@ -55,7 +55,7 @@ function CurrencyType({currencies, defaultType, ...rest}) {
 }
 
 CurrencyType.propTypes = {
-    currencies: PropTypes.object.isRequired,
+    currencyList: PropTypes.object.isRequired,
     defaultType: PropTypes.string.isRequired,
 }
 

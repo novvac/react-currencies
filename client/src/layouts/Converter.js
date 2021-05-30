@@ -36,87 +36,87 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const defaultCurrenciesFields = [
-    {
-        id: 0,
-        value: 0,
-        type: "PLN"
-    },
-    {
-        id: 1,
-        value: 0,
-        type: "EUR"
-    }
-]
-
 function Converter(props) {
     const classes = useStyles();
-    const [currenciesFields, setCurrenciesFields] = useState(defaultCurrenciesFields);
+    const [currencyFields, setCurrencyFields] = useState([{type: "PLN"},{type: "EUR"}]);
+    const [currencyCached, setCurrencyCached] = useState([]);
 
-    function currencyAction(type) {
-        let fields = currenciesFields.slice();
-        const nextId = fields[fields.length-1].id + 1;
-        
+    function handleAction(type) {
+        let fields = currencyFields.slice();
+
         if(type === "add") {
-            fields.push({value: 0, type: "PLN", id: nextId});
+            fields.push({type: "PLN"});
         } else if(type === "remove") {
             fields.pop();
 
-            if(currenciesFields.length <= 2) {
+            if(currencyFields.length <= 2) {
                 return null;
             }
         }
 
-        setCurrenciesFields(fields);
+        setCurrencyFields(fields);
     }
 
     const handleChange = (e) => {
-        let fields = currenciesFields.slice();
-        const id = e.currentTarget.id;
-        const index = fields.findIndex(el => el.id.toString() === id);
-        const BASE_URL = `https://free.currconv.com/api/v7/convert?apiKey=${keys.currenciesApi}&q=`;
+        const target = e.currentTarget;
+        const targetId = target.id.slice(5, target.id.length);
+        const targetType = target.id.slice(0, 5);
+        const targetValue = target.value;
+        console.clear();
 
-        if(e.currentTarget.dataset.value) {
-            fields[index].type = e.currentTarget.dataset.value;
-            const fromCurrency = fields.find(field => field.id === 0).type;
-            const toCurrency = fields.find(field => field.id.toString() === id).type;
-            const value = fields.find(field => field.id === 0).value;
+        if(targetType === "genre") {
+            const currencyFieldsClone = currencyFields.slice();
+            currencyFieldsClone[targetId].type = target.dataset.value;
+            setCurrencyFields(currencyFieldsClone);
+        } else {
+            const inputs = document.querySelectorAll('input.MuiInputBase-input');
+            const fromCurrency = currencyFields[targetId].type;
 
-            if(id.toString() === '0') {
-                fields.map(field => {
-                    if(field.id.toString() !== id) {
-                        let el = document.getElementById(field.id);
-                        axios.get(BASE_URL + fromCurrency + "_" + field.type + '&compact=y').then(res => {
-                            const returnedVal = res.data[`${fromCurrency}_${field.type}`].val;
-                            el.value = (returnedVal * value).toFixed(2);
+            inputs.forEach(input => {
+                const inputId = input.id.slice(5, input.id.length);
+
+                if(inputId !== targetId) {
+                    const toCurrency = currencyFields[inputId].type;
+                    const exchangeVal = getCurrencyCached(fromCurrency, toCurrency)
+                    if(exchangeVal) {
+                        input.value = (targetValue * exchangeVal).toFixed(2);
+                    } else {
+                        addCurrencyCached(fromCurrency, toCurrency).then(res => {
+                            console.log(res);
+                            input.value = (targetValue * res).toFixed(2);
                         })
                     }
-                })
-            } else {
-                let el = document.getElementById(id);
-                axios.get(BASE_URL + fromCurrency + "_" + toCurrency + '&compact=y').then(res => {
-                    const returnedVal = res.data[`${fromCurrency}_${toCurrency}`].val;
-                    el.value = (returnedVal * value).toFixed(2);
-                })
-            }
-        } else {
-            fields[index].value = e.currentTarget.value;
-            const fromCurrency = fields.find(field => field.id.toString() === id).type;
-            const value = fields.find(field => field.id.toString() === id).value;
-
-            fields.map(field => {
-                if(field.id.toString() !== id) {
-                    let el = document.getElementById(field.id);
-                    axios.get(BASE_URL + fromCurrency + "_" + field.type + '&compact=y').then(res => {
-                        const returnedVal = res.data[`${fromCurrency}_${field.type}`].val;
-                        el.value = (returnedVal * value).toFixed(2);
-                    })
                 }
-            })
-
+            });
         }
+    }
 
-        setCurrenciesFields(fields);
+    function getCurrencyCached(from, to) {
+        let founded = currencyCached.find(el => {
+            if(el.from === from && el.to === to)
+                return el;
+        })
+
+        if(founded)
+            return founded.val;
+            
+        return undefined;
+    }
+
+    async function addCurrencyCached(from, to) {
+        const URL = `https://free.currconv.com/api/v7/convert?apiKey=${keys.currencyApi}&q=${from}_${to}&compact=y`
+        return await axios.get(URL).then(res => {
+            if(!getCurrencyCached(from, to)) {
+                let newCached = currencyCached.slice();
+                const val = res.data[`${from}_${to}`].val
+
+                newCached.push({ from, to, val })
+                setCurrencyCached(newCached)
+                return val;
+            }
+        }).catch(err => {
+            console.log(err);
+        })
     }
 
     return (
@@ -130,7 +130,7 @@ function Converter(props) {
                     Lorem Ipsum is simply dummy text of the printing and typesetting industry. Next we use some API when you typing your exchange value!
                 </Typography>
 
-                {currenciesFields.map((field, i) => (
+                {currencyFields.map((field, i) => (
                     <div key={i}>
                         {i <= 1 ? (
                             <Typography variant="caption">
@@ -138,9 +138,9 @@ function Converter(props) {
                             </Typography>
                         ) : null}
 
-                        <CurrencyBox 
-                            id={field.id.toString()}
-                            currencies={props.currencies} 
+                        <CurrencyBox    
+                            id={i}
+                            currencyList={props.currencyList} 
                             field={field}
                             onChange={handleChange}
                         />
@@ -148,11 +148,11 @@ function Converter(props) {
                 ))}
 
                 <Box className={classes.buttons}>
-                    <Button color="primary" variant="outlined" onClick={() => currencyAction('add')}>
+                    <Button color="primary" variant="outlined" onClick={() => handleAction('add')}>
                         Add currency
                     </Button>
 
-                    <Button className={classes.buttonRemove} color="secondary" variant="outlined" disabled={currenciesFields.length <= 2} onClick={() => currencyAction("remove")}>
+                    <Button className={classes.buttonRemove} color="secondary" variant="outlined" disabled={currencyFields.length <= 2} onClick={() => handleAction("remove")}>
                         Remove last
                     </Button>
                 </Box>

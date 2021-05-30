@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 function AppLayout() {
     const classes = useStyles();
     const theme = useTheme();
-    const [currencies, setCurrencies] = useState([]);
+    const [currencyList, setCurrencyList] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const isMobile = useMediaQuery(theme.breakpoints.down('md'), {
@@ -37,9 +37,9 @@ function AppLayout() {
     })
 
     useEffect(() => {
-        const CURRENCIES_LIST = "https://free.currconv.com/api/v7/currencies?apiKey=" + keys.currenciesApi;
-        axios.get(CURRENCIES_LIST).then(res => {
-            setCurrencies(res.data.results);
+        const CURRENCIES_LIST_URL = "https://free.currconv.com/api/v7/currencies?apiKey=" + keys.currencyApi;
+        axios.get(CURRENCIES_LIST_URL).then(res => {
+            setCurrencyList(res.data.results);
             setLoading(false);
         })
     }, []);
@@ -53,7 +53,7 @@ function AppLayout() {
     return (
         <Grid container spacing={isMobile ? 2 : 10} className={classes.root}>
             <Introduction/>
-            <Converter currencies={currencies}/>
+            <Converter currencyList={currencyList}/>
         </Grid>
     )
 }
