@@ -1,5 +1,5 @@
 const keys = {
-    currencyApi: '6c138b8f519ab5d7ec02',
+    currencyApi: '655b5d193f8c80fe1913',
 }
 
 export default keys;

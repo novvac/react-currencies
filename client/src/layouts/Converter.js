@@ -69,26 +69,27 @@ function Converter(props) {
             const currencyFieldsClone = currencyFields.slice();
             currencyFieldsClone[targetId].type = target.dataset.value;
             setCurrencyFields(currencyFieldsClone);
-        } else {
-            const inputs = document.querySelectorAll('input.MuiInputBase-input');
-            const fromCurrency = currencyFields[targetId].type;
 
-            inputs.forEach(input => {
-                const inputId = input.id.slice(5, input.id.length);
+            if(parseInt(targetId) === 0) {
+                const inputValue = document.getElementById(`input${targetId}`).value;
+                updateInputs(targetId, inputValue);
+            } else {
+                const fromInputValue = document.getElementById('input0').value;
+                const fromInputType = currencyFields[0].type;
 
-                if(inputId !== targetId) {
-                    const toCurrency = currencyFields[inputId].type;
-                    const exchangeVal = getCurrencyCached(fromCurrency, toCurrency)
-                    if(exchangeVal) {
-                        input.value = (targetValue * exchangeVal).toFixed(2);
-                    } else {
-                        addCurrencyCached(fromCurrency, toCurrency).then(res => {
-                            console.log(res);
-                            input.value = (targetValue * res).toFixed(2);
-                        })
-                    }
+                const input = document.getElementById(`input${targetId}`);
+
+                const cached = getCurrencyCached(fromInputType, currencyFields[targetId].type)
+                if(!cached) {
+                    addCurrencyCached(fromInputType, currencyFields[targetId].type).then(res => {
+                        input.value = (fromInputValue * res).toFixed(2);
+                    })
+                } else {
+                    input.value = (fromInputValue * cached).toFixed(2);
                 }
-            });
+            }
+        } else {
+            updateInputs(targetId, targetValue)
         }
     }
 
@@ -105,7 +106,7 @@ function Converter(props) {
     }
 
     async function addCurrencyCached(from, to) {
-        const URL = `https://free.currconv.com/api/v7/convert?apiKy=${keys.currencyApi}&q=${from}_${to}&compact=y`
+        const URL = `https://free.currconv.com/api/v7/convert?apiKey=${keys.currencyApi}&q=${from}_${to}&compact=y`
         return await axios.get(URL).then(res => {
             if(!getCurrencyCached(from, to)) {
                 let newCached = currencyCached.slice();
@@ -118,6 +119,27 @@ function Converter(props) {
         }).catch(err => {
             toast.error("Podczas ładowania zasobów wystąpił nieznany problem! Spróbuj poźniej, a jeżeli problem nie zostanie rozwiązany skontaktuj się z administracją!", {autoClose: 7500})
         })
+    }
+
+    function updateInputs(targetId, targetValue, ...rest) {
+        const inputs = document.querySelectorAll('input.MuiInputBase-input');
+        const fromCurrency = currencyFields[targetId].type;
+        
+        inputs.forEach(input => {
+            const inputId = input.id.slice(5, input.id.length);
+
+            if(inputId !== targetId) {
+                const toCurrency = currencyFields[inputId].type;
+                const exchangeVal = getCurrencyCached(fromCurrency, toCurrency)
+                if(exchangeVal) {
+                    input.value = (targetValue * exchangeVal).toFixed(2);
+                } else {
+                    addCurrencyCached(fromCurrency, toCurrency).then(res => {
+                        input.value = (targetValue * res).toFixed(2);
+                    })
+                }
+            }
+        });
     }
 
     return (
