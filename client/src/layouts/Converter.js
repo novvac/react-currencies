@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useState } from 'react';
 import axios from 'axios';
 import keys from '../config/keys';
+import { toast } from 'react-toastify';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -104,7 +105,7 @@ function Converter(props) {
     }
 
     async function addCurrencyCached(from, to) {
-        const URL = `https://free.currconv.com/api/v7/convert?apiKey=${keys.currencyApi}&q=${from}_${to}&compact=y`
+        const URL = `https://free.currconv.com/api/v7/convert?apiKy=${keys.currencyApi}&q=${from}_${to}&compact=y`
         return await axios.get(URL).then(res => {
             if(!getCurrencyCached(from, to)) {
                 let newCached = currencyCached.slice();
@@ -115,7 +116,7 @@ function Converter(props) {
                 return val;
             }
         }).catch(err => {
-            console.log(err);
+            toast.error("Podczas ładowania zasobów wystąpił nieznany problem! Spróbuj poźniej, a jeżeli problem nie zostanie rozwiązany skontaktuj się z administracją!", {autoClose: 7500})
         })
     }
 
