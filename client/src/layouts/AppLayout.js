@@ -1,14 +1,17 @@
 import {
     Grid,
     useMediaQuery,
+    Typography
 } from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import keys from '../config/keys'
+import { toast } from 'react-toastify';
 
 import Introduction from './Introduction';
 import Converter from './Converter';
+import Loader from './Loader'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -41,15 +44,30 @@ function AppLayout() {
         axios.get(CURRENCIES_LIST_URL).then(res => {
             setCurrencyList(res.data.results);
             setLoading(false);
+        }).catch(err => {
+            toast.error("Data cannot be loaded! Application stoped!");
+            setCurrencyList(undefined);
+            setLoading(false);
         })
     }, []);
 
-    // render
-    if(loading) {
+    if(loading)
+        return <Loader />
+
+    if(currencyList === undefined) {
         return (
-            <p>loading... please wait</p>
+            <>
+                <Typography variant="h5">
+                    <b>Application cannot be loaded!</b>
+                </Typography>
+
+                <Typography>
+                    Contact with us here: <a href="https://github.com/novvac"><b>[LINK]</b></a>
+                </Typography>
+            </>
         )
     }
+        
     return (
         <Grid container spacing={isMobile ? 2 : 10} className={classes.root}>
             <Introduction/>
